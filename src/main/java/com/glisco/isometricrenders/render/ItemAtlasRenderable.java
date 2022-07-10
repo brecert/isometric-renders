@@ -2,6 +2,7 @@ package com.glisco.isometricrenders.render;
 
 import com.glisco.isometricrenders.property.DefaultPropertyBundle;
 import com.glisco.isometricrenders.property.IntProperty;
+import com.glisco.isometricrenders.property.Property;
 import com.glisco.isometricrenders.util.ExportPathSpec;
 import com.glisco.isometricrenders.widget.WidgetColumnBuilder;
 import net.minecraft.client.MinecraftClient;
@@ -31,11 +32,10 @@ public class ItemAtlasRenderable extends DefaultRenderable<ItemAtlasRenderable.I
     public void emitVertices(MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta) {
         final int columns = this.properties().columns.get();
         final int rows = MathHelper.ceilDiv(this.items.size(), columns);
+        final int spacing = this.properties().spacing.get();
 
-        final float spacing = 1.25f;
-
-        matrices.scale(.1f, .1f, .1f);
-        matrices.translate((-columns / 2f) * spacing - spacing / 2, (rows / 2f) * spacing + spacing / 2, 0);
+        matrices.scale(.25f, .25f, .25f);
+        matrices.translate(-((columns / 2f) + 0.5f), (rows / 2f) + 0.5f, 0);
 
         for (int row = 0; row < rows; row++) {
             matrices.translate(0, -spacing, 0);
@@ -74,6 +74,7 @@ public class ItemAtlasRenderable extends DefaultRenderable<ItemAtlasRenderable.I
         private static final ItemAtlasPropertyBundle INSTANCE = new ItemAtlasPropertyBundle();
 
         private final IntProperty columns = IntProperty.of(20, 1, 500);
+        private IntProperty spacing = IntProperty.of(0, 1, 2);
 
         @Override
         public void buildGuiControls(Renderable<?> renderable, WidgetColumnBuilder builder) {
@@ -81,6 +82,7 @@ public class ItemAtlasRenderable extends DefaultRenderable<ItemAtlasRenderable.I
 
             this.appendIntControls(builder, this.scale, "scale", 10);
             this.appendIntControls(builder, this.columns, "columns", 1);
+            this.appendIntControls(builder, this.spacing, "spacing", 1);
         }
 
         @Override

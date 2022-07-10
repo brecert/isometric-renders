@@ -11,6 +11,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public class BatchRenderable<R extends Renderable<?>> implements Renderable<BatchRenderable.BatchPropertyBundle> {
@@ -32,10 +33,10 @@ public class BatchRenderable<R extends Renderable<?>> implements Renderable<Batc
         this.reset();
 
         this.contentType = ExportPathSpec.exportRoot().resolve("batches/")
-                .relativize(ImageIO.next(ExportPathSpec.exportRoot().resolve("batches/" + source + "/"))).toString();
+                .relativize(ImageIO.next(ExportPathSpec.exportRoot().resolve("batches/" + source.replaceAll(":", "_") +  "/"))).toString();
 
         this.properties = new BatchPropertyBundle(this.currentDelegate.properties());
-        this.renderDelay = Math.max((int) Math.pow(GlobalProperties.exportResolution / 1024f, 2) * 100L, 75);
+        this.renderDelay = Math.max((int) Math.pow(GlobalProperties.exportResolution / 1024f, 2) * 100L, 10);
     }
 
     public static <R extends Renderable<?>> BatchRenderable<?> of(String source, List<R> delegates) {
@@ -50,7 +51,7 @@ public class BatchRenderable<R extends Renderable<?>> implements Renderable<Batc
     public void emitVertices(MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta) {
         this.currentDelegate.emitVertices(matrices, vertexConsumers, tickDelta);
 
-        if (this.batchActive && this.currentIndex < this.delegates.size() && System.currentTimeMillis() - this.lastRenderTime > this.renderDelay && ImageIO.taskCount() <= 5) {
+        if (this.batchActive && this.currentIndex < this.delegates.size()) {
             final var image = RenderableDispatcher.drawIntoImage(this.currentDelegate, 0, GlobalProperties.exportResolution);
             ImageIO.save(image, this.exportPath());
 

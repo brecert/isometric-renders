@@ -60,7 +60,7 @@ public class DefaultPropertyBundle implements PropertyBundle {
         final float scale = this.scale.get() / 100f;
         modelViewStack.scale(scale, scale, scale);
 
-        modelViewStack.translate(this.xOffset.get() / 26000d, this.yOffset.get() / -26000d, 0);
+//        modelViewStack.translate(this.xOffset.get() / 26000d, this.yOffset.get() / -26000d, 0);
 
         modelViewStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.slant.get()));
         modelViewStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(this.rotation.get()));

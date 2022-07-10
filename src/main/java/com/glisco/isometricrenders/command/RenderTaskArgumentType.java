@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class RenderTaskArgumentType implements ArgumentType<RenderTask> {
 
-    private final SimpleCommandExceptionType EXCEPTION = new SimpleCommandExceptionType(Text.of("mald about it, see if anybody notices"));
+    private final SimpleCommandExceptionType EXCEPTION = new SimpleCommandExceptionType(Text.of("Invalid Command"));
 
     public static <S> RenderTask getTask(String name, CommandContext<S> context) {
         return context.getArgument(name, RenderTask.class);

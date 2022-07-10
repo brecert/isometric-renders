@@ -30,23 +30,11 @@ public class ItemRenderable extends DefaultRenderable<DefaultPropertyBundle> {
     @Override
     public void emitVertices(MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta) {
         final var itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-        final var hasDepth = itemRenderer.getModel(this.stack, null, null, 0).hasDepth();
-        final float scale = hasDepth ? 2f : 1.75f;
 
         matrices.push();
-        matrices.scale(scale, scale, scale);
+        matrices.scale(2f, 2f, 2f);
 
-        // This funny matrix manipulation here is done in order to
-        // avoid funny axis rotation on models with depth
-        if (hasDepth) {
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-this.properties().rotation.get()));
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(30));
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(this.properties().rotation.get() + 135));
-        } else {
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
-        }
-
-        itemRenderer.renderItem(this.stack, ModelTransformation.Mode.FIXED, LightmapTextureManager.MAX_LIGHT_COORDINATE,
+        itemRenderer.renderItem(this.stack, ModelTransformation.Mode.GUI, LightmapTextureManager.MAX_LIGHT_COORDINATE,
                 OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, 0);
         matrices.pop();
     }
